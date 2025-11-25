@@ -1,15 +1,14 @@
-// app/offers/page.jsx
+// app/offers/OffersClient.jsx - CLIENT COMPONENT
 'use client';
 
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Zap, Users, Star, Shield, TrendingUp, Clock } from 'lucide-react';
+import { CheckCircle, ArrowRight, Zap, Star } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
-export default function Offers() {
+export default function OffersClient() {
   const searchParams = useSearchParams();
   const type = searchParams.get('type'); // 'nodoc' or 'docs'
-  
-  // CLIENT'S ACTUAL SKOOL LINK
+
   const skoolCommunityLink = 'https://www.skool.com/scoreup-riseup-8242/about?ref=b4cc043a053741369202bc1a39df4599';
 
   const paymentLinks = {
@@ -32,8 +31,7 @@ export default function Offers() {
         'Priority Skool Community Access',
         'Credit Building Templates'
       ],
-      cta: 'Get Credit Builder Kit',
-      popular: false
+      cta: 'Get Credit Builder Kit'
     },
     {
       id: 'priority-funding',
@@ -53,244 +51,132 @@ export default function Offers() {
     }
   ];
 
-  const getHeaderMessage = () => {
-    if (type === 'nodoc') {
-      return "You're approved for premium no-document funding!";
-    } else if (type === 'docs') {
-      return "You're pre-qualified for funding!";
-    }
-    return "You're pre-qualified for business funding!";
-  };
-
-  const getSubMessage = () => {
-    if (type === 'nodoc') {
-      return "Boost your funding potential with these exclusive offers.";
-    } else if (type === 'docs') {
-      return "These services can help you get funded faster and for higher amounts.";
-    }
-    return "Add these services to maximize your funding amount and speed.";
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-bold text-gray-900 mb-4"
-          >
-            {getHeaderMessage()}
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
-          >
-            {getSubMessage()}
-          </motion.p>
-        </div>
-
-        {/* Trust Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200">
-            <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-gray-900">90%+</div>
-            <div className="text-gray-600">Approval Rate</div>
-          </div>
-          <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200">
-            <Zap className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-gray-900">48-72</div>
-            <div className="text-gray-600">Hours to Match</div>
-          </div>
-          <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-200">
-            <Users className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-            <div className="text-2xl font-bold text-gray-900">100+</div>
-            <div className="text-gray-600">Lender Network</div>
-          </div>
-        </div>
-
-        {/* Special Offer Alert */}
+      <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-6 mb-8"
+          className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8"
         >
-          <div className="flex items-center mb-2">
-            <Star className="w-6 h-6 text-green-600 mr-2" />
-            <span className="text-green-800 font-bold text-lg">Exclusive Pre-Qualified Offers</span>
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Zap className="w-8 h-8 text-green-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Boost Your Funding Success</h1>
+            <p className="text-gray-600">
+              You're pre-qualified! Add these services to maximize your funding amount and speed.
+            </p>
           </div>
-          <p className="text-green-700">
-            As a pre-qualified applicant, you get access to premium services that can double your funding amount 
-            and cut approval time in half. These offers are only available to qualified applicants.
-          </p>
-        </motion.div>
 
-        {/* Offer Packages */}
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {offers.map((offer, index) => (
-            <motion.div
-              key={offer.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`bg-white rounded-2xl shadow-lg border-2 ${
-                offer.popular ? 'border-blue-500 transform scale-105 relative' : 'border-gray-200'
-              }`}
-            >
-              {offer.popular && (
-                <div className="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  Most Popular
-                </div>
-              )}
-              
-              <div className="p-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{offer.name}</h3>
-                  <p className="text-gray-600 text-sm">{offer.description}</p>
-                </div>
+          {/* Special Offer Alert */}
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-6 mb-8">
+            <div className="flex items-center mb-2">
+              <Star className="w-6 h-6 text-green-600 mr-2" />
+              <span className="text-green-800 font-bold text-lg">Special Limited-Time Offers</span>
+            </div>
+            <p className="text-green-700">
+              As a pre-qualified applicant, you get exclusive access to these premium services 
+              that can double your funding amount and cut approval time in half.
+            </p>
+          </div>
+
+          {/* Offer Packages */}
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            {offers.map((offer, index) => (
+              <motion.div
+                key={offer.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`bg-white rounded-2xl shadow-lg border-2 ${offer.popular ? 'border-blue-500 relative' : 'border-gray-200'}`}
+              >
+                {offer.popular && (
+                  <div className="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Most Popular
+                  </div>
+                )}
                 
-                <div className="text-center mb-6">
-                  <span className="text-4xl font-bold text-gray-900">{offer.price}</span>
-                  <span className="text-gray-600">/one-time</span>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{offer.name}</h3>
+                  <p className="text-gray-600 text-sm mb-4">{offer.description}</p>
+                  
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold text-gray-900">{offer.price}</span>
+                    <span className="text-gray-600">/one-time</span>
+                  </div>
+
+                  <ul className="space-y-3 mb-6">
+                    {offer.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start">
+                        <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a
+                    href={paymentLinks[offer.id]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block w-full text-center font-bold py-3 px-6 rounded-lg transition-colors duration-200 ${
+                      offer.popular 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : 'bg-gray-600 hover:bg-gray-700 text-white'
+                    }`}
+                  >
+                    {offer.cta}
+                  </a>
                 </div>
+              </motion.div>
+            ))}
+          </div>
 
-                <ul className="space-y-4 mb-8">
-                  {offer.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Payment Button */}
-                <a
-                  href={paymentLinks[offer.id]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`block w-full text-center font-bold py-4 px-6 rounded-lg transition-colors duration-200 ${
-                    offer.popular 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                      : 'bg-gray-600 hover:bg-gray-700 text-white'
-                  } flex items-center justify-center space-x-2`}
-                >
-                  <span>{offer.cta}</span>
-                  <ArrowRight className="w-5 h-5" />
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Consultation Call */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl shadow-lg p-8 text-center text-white mb-12"
-        >
-          <div className="max-w-2xl mx-auto">
-            <Zap className="w-12 h-12 text-yellow-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold mb-4">1-on-1 Funding Strategy Session</h3>
-            <p className="text-orange-100 text-lg mb-6">
-              Get personalized guidance from our funding experts. Perfect your application strategy, 
-              maximize your funding amount, and get direct answers to your specific situation.
+          {/* Consultation Call */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-center text-white mb-8"
+          >
+            <h3 className="text-xl font-bold mb-3">1-on-1 Funding Strategy Session</h3>
+            <p className="text-purple-100 mb-4">
+              Get personalized guidance from our funding experts. Perfect your application and maximize your approval chances.
             </p>
             <a
               href={paymentLinks.consultation}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center bg-white text-orange-600 font-bold py-4 px-8 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+              className="inline-flex items-center bg-white text-purple-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors duration-200"
             >
               Book Strategy Session
               <ArrowRight className="ml-2 w-5 h-5" />
             </a>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Skool Community */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg p-8 text-center text-white mb-12"
-        >
-          <div className="max-w-2xl mx-auto">
-            <Users className="w-12 h-12 text-cyan-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold mb-4">Join Our Exclusive Skool Community</h3>
-            <p className="text-blue-100 text-lg mb-6">
-              Get instant access to our private community of funded entrepreneurs. Network with successful 
-              business owners, get real-time advice from funding experts, and accelerate your growth journey.
+          {/* Skool Community */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="border-2 border-blue-200 bg-blue-50 rounded-xl p-6 text-center"
+          >
+            <h3 className="text-xl font-bold text-blue-900 mb-3">Join Our Exclusive Community</h3>
+            <p className="text-blue-800 mb-4">
+              Get access to our private Skool community where you can network with other funded entrepreneurs, 
+              get expert advice, and accelerate your business growth.
             </p>
             <a
               href={skoolCommunityLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center bg-white text-blue-600 font-bold py-4 px-8 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+              className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200"
             >
               Join ScoreUp RiseUp Community
               <ArrowRight className="ml-2 w-5 h-5" />
             </a>
-          </div>
-        </motion.div>
-
-        {/* Next Steps */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 text-center"
-        >
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">What Happens Next</h3>
-          
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Clock className="w-6 h-6 text-blue-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Application Review</h4>
-              <p className="text-gray-600 text-sm">Our team reviews your application (24-48 hours)</p>
-            </div>
-            <div>
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Users className="w-6 h-6 text-green-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Lender Matching</h4>
-              <p className="text-gray-600 text-sm">We match you with 3-5 suitable lenders</p>
-            </div>
-            <div>
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Funding Offers</h4>
-              <p className="text-gray-600 text-sm">Receive multiple funding offers to compare</p>
-            </div>
-            <div>
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Zap className="w-6 h-6 text-orange-600" />
-              </div>
-              <h4 className="font-semibold text-gray-900 mb-2">Get Funded</h4>
-              <p className="text-gray-600 text-sm">Choose your offer and receive funds (1-2 weeks)</p>
-            </div>
-          </div>
-
-          {/* Skip Option */}
-          <div className="border-t border-gray-200 pt-8">
-            <p className="text-gray-600 mb-4">
-              Ready to proceed with your standard application?
-            </p>
-            <a
-              href="/thank-you?type=application"
-              className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Continue with standard application
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </a>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </div>
