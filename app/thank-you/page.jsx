@@ -1,11 +1,12 @@
 // app/thank-you/page.jsx
 'use client';
 
+import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Mail, Clock, Users, ArrowRight } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
-export default function ThankYou() {
+function ThankYouContent() {
   const searchParams = useSearchParams();
   const type = searchParams.get('type') || 'general';
 
@@ -149,5 +150,20 @@ export default function ThankYou() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function ThankYou() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ThankYouContent />
+    </Suspense>
   );
 }
