@@ -29,8 +29,10 @@ export default function PrequalificationDocs() {
   const [showOffers, setShowOffers] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState(null);
 
+  // Fix: Convert searchParams.get() to string for comparison
   useEffect(() => {
-    if (searchParams.get('submitted') === 'true') {
+    const submitted = searchParams?.get('submitted');
+    if (submitted === 'true') {
       setShowOffers(true);
     }
   }, [searchParams]);
@@ -59,30 +61,35 @@ export default function PrequalificationDocs() {
     setIsSubmitting(true);
 
     try {
+      // Fix: Added template_params object structure
+      const templateParams = {
+        to_email: 'travis@scoreupriseup.com',
+        to_name: 'Travis',
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        business_name: formData.businessName,
+        business_type: formData.businessType,
+        funding_amount: formData.fundingAmount,
+        use_of_funds: formData.useOfFunds,
+        time_in_business: formData.timeInBusiness,
+        annual_revenue: formData.annualRevenue,
+        application_type: 'Document-Based Funding Application',
+        credit_tier: '680-699',
+        qualification_status: 'Standard - Docs Required',
+        submission_date: new Date().toLocaleDateString(),
+        message: `STANDARD FUNDING APPLICATION: ${formData.fullName} - ${formData.businessName} - Documents Required`
+      };
+
       await emailjs.send(
         'service_renapht',
         'template_z1vr7ty',
-        {
-          to_email: 'travis@scoreupriseup.com',
-          to_name: 'Travis',
-          full_name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          business_name: formData.businessName,
-          business_type: formData.businessType,
-          funding_amount: formData.fundingAmount,
-          use_of_funds: formData.useOfFunds,
-          time_in_business: formData.timeInBusiness,
-          annual_revenue: formData.annualRevenue,
-          application_type: 'Document-Based Funding Application',
-          credit_tier: '680-699',
-          qualification_status: 'Standard - Docs Required',
-          submission_date: new Date().toLocaleDateString(),
-          message: `STANDARD FUNDING APPLICATION: ${formData.fullName} - ${formData.businessName} - Documents Required`
-        },
+        templateParams,
         'SS2R3dMbKoMDjBayk'
       );
 
+      // Fix: Update URL with query parameter
+      router.push('/prequalification-docs?submitted=true');
       setShowOffers(true);
 
     } catch (error) {
@@ -96,18 +103,19 @@ export default function PrequalificationDocs() {
   const handleOfferSelect = (offer) => {
     setSelectedOffer(offer);
     
-    setTimeout(() => {
-      if (offer.id === 'tri-merge') {
-        window.open('https://myfreescorenow.com/enroll/?AID=ScoreUpRiseUp&PID=58125', '_blank');
-        router.push('/thank-you/tri-merge-report?type=premium');
-      } else if (offer.id === 'builder-kit') {
-        router.push('/offers/builder-kit');
-      } else if (offer.id === 'priority') {
-        router.push('/offers/priority-funding');
-      } else if (offer.id === 'consultation') {
-        router.push('/offers/consultation');
-      }
-    }, 1000);
+    // Fix: Added null check for offer
+    if (!offer) return;
+    
+    if (offer.id === 'tri-merge') {
+      window.open('https://myfreescorenow.com/enroll/?AID=ScoreUpRiseUp&PID=58125', '_blank');
+      router.push('/thank-you/tri-merge-report?type=premium');
+    } else if (offer.id === 'builder-kit') {
+      router.push('/offers/builder-kit');
+    } else if (offer.id === 'priority') {
+      router.push('/offers/priority-funding');
+    } else if (offer.id === 'consultation') {
+      router.push('/offers/consultation');
+    }
   };
 
   const standardOffers = [
@@ -177,6 +185,7 @@ export default function PrequalificationDocs() {
     }
   ];
 
+  // Fix: Check if showOffers is true before rendering offers
   if (showOffers) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
@@ -398,7 +407,6 @@ export default function PrequalificationDocs() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Form fields same as prequalification-nodoc */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
               <div className="grid md:grid-cols-2 gap-4">

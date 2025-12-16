@@ -40,8 +40,10 @@ export default function PrequalificationNoDoc() {
     annualRevenue: ''
   });
 
+  // Fix: Convert searchParams.get() to string for comparison
   useEffect(() => {
-    if (searchParams.get('submitted') === 'true') {
+    const submitted = searchParams?.get('submitted');
+    if (submitted === 'true') {
       setShowOffers(true);
     }
   }, [searchParams]);
@@ -58,30 +60,35 @@ export default function PrequalificationNoDoc() {
     setIsSubmitting(true);
 
     try {
+      // Fix: Added template_params object structure
+      const templateParams = {
+        to_email: 'travis@scoreupriseup.com',
+        to_name: 'Travis',
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        business_name: formData.businessName,
+        business_type: formData.businessType,
+        funding_amount: formData.fundingAmount,
+        use_of_funds: formData.useOfFunds,
+        time_in_business: formData.timeInBusiness,
+        annual_revenue: formData.annualRevenue,
+        application_type: 'No-Doc Funding Application',
+        credit_tier: '700+',
+        qualification_status: 'Premium',
+        submission_date: new Date().toLocaleDateString(),
+        message: `PREMIUM NO-DOC APPLICATION: ${formData.fullName} - ${formData.businessName}`
+      };
+
       await emailjs.send(
         'service_renapht',
         'template_z1vr7ty',
-        {
-          to_email: 'travis@scoreupriseup.com',
-          to_name: 'Travis',
-          full_name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          business_name: formData.businessName,
-          business_type: formData.businessType,
-          funding_amount: formData.fundingAmount,
-          use_of_funds: formData.useOfFunds,
-          time_in_business: formData.timeInBusiness,
-          annual_revenue: formData.annualRevenue,
-          application_type: 'No-Doc Funding Application',
-          credit_tier: '700+',
-          qualification_status: 'Premium',
-          submission_date: new Date().toLocaleDateString(),
-          message: `PREMIUM NO-DOC APPLICATION: ${formData.fullName} - ${formData.businessName}`
-        },
+        templateParams,
         'SS2R3dMbKoMDjBayk'
       );
 
+      // Fix: Update URL with query parameter
+      router.push('/prequalification-nodoc?submitted=true');
       setShowOffers(true);
 
     } catch (error) {
@@ -95,16 +102,17 @@ export default function PrequalificationNoDoc() {
   const handleOfferSelect = (offer) => {
     setSelectedOffer(offer);
     
-    setTimeout(() => {
-      if (offer.id === 'tri-merge') {
-        window.open('https://myfreescorenow.com/enroll/?AID=ScoreUpRiseUp&PID=58125', '_blank');
-        router.push('/thank-you/tri-merge-report?type=free');
-      } else if (offer.id === 'builder-kit') {
-        router.push('/offers/builder-kit');
-      } else if (offer.id === 'priority') {
-        router.push('/offers/priority-funding');
-      }
-    }, 1000);
+    // Fix: Added null check for offer
+    if (!offer) return;
+    
+    if (offer.id === 'tri-merge') {
+      window.open('https://myfreescorenow.com/enroll/?AID=ScoreUpRiseUp&PID=58125', '_blank');
+      router.push('/thank-you/tri-merge-report?type=free');
+    } else if (offer.id === 'builder-kit') {
+      router.push('/offers/builder-kit');
+    } else if (offer.id === 'priority') {
+      router.push('/offers/priority-funding');
+    }
   };
 
   const premiumOffers = [
@@ -158,6 +166,7 @@ export default function PrequalificationNoDoc() {
     }
   ];
 
+  // Fix: Check if showOffers is true before rendering offers
   if (showOffers) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8 px-4">
@@ -208,7 +217,7 @@ export default function PrequalificationNoDoc() {
                 transition={{ delay: index * 0.1 }}
                 className={`bg-white rounded-2xl shadow-lg border-2 ${
                   offer.popular ? 'border-blue-500 relative' : 'border-gray-200'
-                } p-6 hover:shadow-xl transition-all duration-300`}
+                } p-6 hover:shadow-xl transition-all duration-300 flex flex-col h-full`}
               >
                 {offer.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -225,7 +234,7 @@ export default function PrequalificationNoDoc() {
                   </div>
                 )}
 
-                <div className="text-center mb-6">
+                <div className="text-center mb-6 flex-grow">
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{offer.title}</h3>
                   <p className="text-gray-600 text-sm mb-4">{offer.description}</p>
                   
@@ -239,7 +248,7 @@ export default function PrequalificationNoDoc() {
                   </div>
                 </div>
 
-                <ul className="space-y-3 mb-6">
+                <ul className="space-y-3 mb-6 flex-grow">
                   {offer.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center text-sm text-gray-700">
                       <CheckCircle className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" />
@@ -255,7 +264,7 @@ export default function PrequalificationNoDoc() {
                     offer.popular 
                       ? 'bg-blue-600 hover:bg-blue-700' 
                       : 'bg-green-600 hover:bg-green-700'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  } disabled:opacity-50 disabled:cursor-not-allowed mt-auto`}
                 >
                   {selectedOffer?.id === offer.id ? (
                     <span className="flex items-center justify-center">
