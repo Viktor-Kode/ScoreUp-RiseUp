@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import { 
   CheckCircle, 
   ArrowRight, 
@@ -19,14 +18,21 @@ import {
   Award,
   Zap
 } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function PrequalificationNoDoc() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showOffers, setShowOffers] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState(null);
+
+  // Fixed: Check URL params on client side only
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('submitted') === 'true') {
+      setShowOffers(true);
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -40,14 +46,6 @@ export default function PrequalificationNoDoc() {
     annualRevenue: ''
   });
 
-  // Fix: Convert searchParams.get() to string for comparison
-  useEffect(() => {
-    const submitted = searchParams?.get('submitted');
-    if (submitted === 'true') {
-      setShowOffers(true);
-    }
-  }, [searchParams]);
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -60,7 +58,9 @@ export default function PrequalificationNoDoc() {
     setIsSubmitting(true);
 
     try {
-      // Fix: Added template_params object structure
+      // Using EmailJS directly in client (dynamic import to avoid SSR issues)
+      const emailjs = (await import('@emailjs/browser')).default;
+      
       const templateParams = {
         to_email: 'travis@scoreupriseup.com',
         to_name: 'Travis',
@@ -87,8 +87,10 @@ export default function PrequalificationNoDoc() {
         'SS2R3dMbKoMDjBayk'
       );
 
-      // Fix: Update URL with query parameter
-      router.push('/prequalification-nodoc?submitted=true');
+      // Update URL without reload
+      const url = new URL(window.location.href);
+      url.searchParams.set('submitted', 'true');
+      window.history.pushState({}, '', url);
       setShowOffers(true);
 
     } catch (error) {
@@ -102,7 +104,6 @@ export default function PrequalificationNoDoc() {
   const handleOfferSelect = (offer) => {
     setSelectedOffer(offer);
     
-    // Fix: Added null check for offer
     if (!offer) return;
     
     if (offer.id === 'tri-merge') {
@@ -166,7 +167,6 @@ export default function PrequalificationNoDoc() {
     }
   ];
 
-  // Fix: Check if showOffers is true before rendering offers
   if (showOffers) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-8 px-4">

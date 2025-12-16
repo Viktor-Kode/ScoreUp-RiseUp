@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import { 
   CheckCircle, 
   ArrowRight, 
@@ -20,22 +19,21 @@ import {
   Award,
   TrendingUp
 } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function PrequalificationDocs() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showOffers, setShowOffers] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState(null);
 
-  // Fix: Convert searchParams.get() to string for comparison
+  // Fixed: Check URL params on client side only
   useEffect(() => {
-    const submitted = searchParams?.get('submitted');
-    if (submitted === 'true') {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('submitted') === 'true') {
       setShowOffers(true);
     }
-  }, [searchParams]);
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -61,7 +59,9 @@ export default function PrequalificationDocs() {
     setIsSubmitting(true);
 
     try {
-      // Fix: Added template_params object structure
+      // Using EmailJS directly in client (dynamic import to avoid SSR issues)
+      const emailjs = (await import('@emailjs/browser')).default;
+      
       const templateParams = {
         to_email: 'travis@scoreupriseup.com',
         to_name: 'Travis',
@@ -88,8 +88,10 @@ export default function PrequalificationDocs() {
         'SS2R3dMbKoMDjBayk'
       );
 
-      // Fix: Update URL with query parameter
-      router.push('/prequalification-docs?submitted=true');
+      // Update URL without reload
+      const url = new URL(window.location.href);
+      url.searchParams.set('submitted', 'true');
+      window.history.pushState({}, '', url);
       setShowOffers(true);
 
     } catch (error) {
@@ -103,7 +105,6 @@ export default function PrequalificationDocs() {
   const handleOfferSelect = (offer) => {
     setSelectedOffer(offer);
     
-    // Fix: Added null check for offer
     if (!offer) return;
     
     if (offer.id === 'tri-merge') {
@@ -185,7 +186,6 @@ export default function PrequalificationDocs() {
     }
   ];
 
-  // Fix: Check if showOffers is true before rendering offers
   if (showOffers) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
@@ -407,6 +407,7 @@ export default function PrequalificationDocs() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Form fields same as prequalification-nodoc */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
               <div className="grid md:grid-cols-2 gap-4">
