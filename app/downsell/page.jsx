@@ -62,8 +62,8 @@ export default function DownsellClient() {
     {
       id: 'business-setup',
       name: 'Business Foundation Kit',
-      price: '$47',
-      originalPrice: '$97',
+      price: '$147',
+      originalPrice: '$197',
       description: 'Complete business setup while you improve your credit score',
       features: [
         'Business Entity Formation Guide',
@@ -83,7 +83,7 @@ export default function DownsellClient() {
     {
       id: 'jumpstart-bundle',
       name: 'Complete Business Jumpstart',
-      price: '$97',
+      price: '$47',
       originalPrice: '$247',
       description: 'Everything you need to repair credit and build business credit simultaneously',
       features: [

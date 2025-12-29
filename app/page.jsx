@@ -6,6 +6,7 @@ import TestimonialsSection from './comonents/TestimonialsSection'
 import FAQSection from './comonents/FAQSection'
 import Navbar from './comonents/Navbar'
 import ContactSection from './comonents/ContactSection'
+import SkoolCommunityTrial from './comonents/Skull'
 
 export default function LandingPage() {
   return (
@@ -16,6 +17,7 @@ export default function LandingPage() {
       <HowItWorks />
       <BenefitsSection />
       <TestimonialsSection />
+      <SkoolCommunityTrial />
       <FAQSection />
       <ContactSection/>
     </main>

@@ -43,7 +43,7 @@ export default function JumpstartBundleOffer() {
           to_email: 'travis@scoreupriseup.com',
           to_name: 'Travis',
           product_name: 'Jumpstart Bundle',
-          product_price: '$97',
+          product_price: '$47',
           customer_action: 'Clicked Purchase',
           timestamp: new Date().toISOString(),
           page_url: window.location.href
@@ -188,8 +188,8 @@ export default function JumpstartBundleOffer() {
               </p>
 
               <div className="flex items-baseline mb-8">
-                <span className="text-5xl font-bold text-gray-900">$97</span>
-                <span className="text-gray-500 ml-2 line-through text-xl">$247</span>
+                <span className="text-5xl font-bold text-gray-900">$47</span>
+                <span className="text-gray-500 ml-2 line-through text-xl">$190</span>
                 <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold ml-4">
                   Save $150
                 </span>
