@@ -202,36 +202,129 @@ export default function QualificationQuiz() {
     }
   };
 
+  const calculateFundingRange = () => {
+    const revenue = answers[2]?.value;
+    switch(revenue) {
+      case 'under-5k': return '$5,000 - $20,000';
+      case '5k-15k': return '$20,000 - $75,000';
+      case '15k-50k': return '$75,000 - $250,000';
+      case 'over-50k': return '$250,000 - $500,000+';
+      default: return 'To be determined';
+    }
+  };
+
+  const determineStatus = () => {
+    const creditScore = answers[1]?.value;
+    const statements = answers[3]?.value;
+    const creditReport = answers[4]?.value;
+    
+    if (creditScore === '700-plus' && statements === 'yes-statements' && creditReport === 'yes-report') {
+      return 'Express Approval - 24-48 Hours';
+    } else if (creditScore === '680-699' && statements !== 'not-available') {
+      return 'Standard Processing - 3-5 Business Days';
+    } else if (creditScore === 'below-680' || statements === 'not-available') {
+      return 'Needs Review - Credit Improvement Path';
+    } else {
+      return 'Under Review - Additional Info Required';
+    }
+  };
+
+  const formatQuizAnswers = () => {
+    return Object.entries(answers)
+      .sort(([a], [b]) => parseInt(a) - parseInt(b))
+      .map(([questionId, data]) => {
+        return `${data.question}: ${data.answer}`;
+      })
+      .join('\n');
+  };
+
+  const calculateApprovalScore = () => {
+    let score = 0;
+    let maxScore = 100;
+    
+    Object.entries(answers).forEach(([questionId, data]) => {
+      switch(questionId) {
+        case '1': // Credit score
+          if (data.value === '700-plus') score += 25;
+          else if (data.value === '680-699') score += 18;
+          else if (data.value === 'below-680') score += 8;
+          break;
+        case '2': // Revenue
+          if (data.value === 'over-50k') score += 25;
+          else if (data.value === '15k-50k') score += 18;
+          else if (data.value === '5k-15k') score += 12;
+          else if (data.value === 'under-5k') score += 6;
+          break;
+        case '3': // Bank statements
+          if (data.value === 'yes-statements') score += 20;
+          else if (data.value === 'no-but-can-get') score += 12;
+          else if (data.value === 'not-available') score += 5;
+          break;
+        case '4': // Credit report
+          if (data.value === 'yes-report') score += 20;
+          else if (data.value === 'no-but-can-get') score += 10;
+          else if (data.value === 'dont-know') score += 5;
+          break;
+        case '5': // Funding type
+          score += 10; // All funding types are valid
+          break;
+      }
+    });
+    
+    return score;
+  };
+
+  const getApprovalOdds = (score) => {
+    if (score >= 80) return "Excellent (90%+)";
+    if (score >= 65) return "Very Good (75-89%)";
+    if (score >= 50) return "Good (60-74%)";
+    if (score >= 35) return "Fair (40-59%)";
+    return "Needs Improvement (<40%)";
+  };
+
   const handleLeadSubmit = async (formData) => {
     setIsSubmitting(true);
 
     try {
       const userTier = determineUserTier();
+      const fundingRange = calculateFundingRange();
+      const status = determineStatus();
+      const quizAnswers = formatQuizAnswers();
+      const quizScore = calculateApprovalScore();
+      const maxScore = 100;
+      const approvalOdds = getApprovalOdds(quizScore);
       
       const leadData = {
         to_email: 'travis@scoreupriseup.com',
         to_name: 'Travis',
+        
+        // Contact Information - matches template
         first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
         phone: formData.phone,
         business_name: formData.businessName,
         
-        credit_score: answers[1]?.answer || 'Not provided',
-        monthly_revenue: answers[2]?.answer || 'Not provided',
-        has_statements: answers[3]?.answer || 'Not provided',
-        has_credit_report: answers[4]?.answer || 'Not provided',
-        funding_purpose: answers[5]?.answer || 'Not provided',
+        // Qualification Results - matches template
+        quiz_score: quizScore,
+        max_score: maxScore,
+        qualification_status: status,
+        funding_range: fundingRange,
+        approval_odds: approvalOdds,
         
-        qualification_tier: userTier.tier,
-        qualification_route: userTier.route,
-        qualification_message: userTier.message,
+        // Quiz Answers - matches template
+        quiz_answers: quizAnswers,
         
-        submission_date: new Date().toLocaleDateString(),
-        timestamp: new Date().toISOString(),
-        
-        message: `NEW QUALIFICATION: ${formData.firstName} ${formData.lastName} - ${userTier.message}`
+        // Submission Date - matches template
+        submission_date: new Date().toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        })
       };
+
+      console.log('Sending email with data:', leadData);
 
       await emailjs.send(
         'service_renapht',
@@ -244,6 +337,8 @@ export default function QualificationQuiz() {
 
     } catch (error) {
       console.error('Failed to submit:', error);
+      console.error('Error details:', error.text || error.message);
+      
       const userTier = determineUserTier();
       router.push(userTier.route);
     } finally {
@@ -255,6 +350,11 @@ export default function QualificationQuiz() {
 
   const LeadCaptureForm = () => {
     const userTier = determineUserTier();
+    const fundingRange = calculateFundingRange();
+    const status = determineStatus();
+    const quizScore = calculateApprovalScore();
+    const maxScore = 100;
+    const approvalOdds = getApprovalOdds(quizScore);
     
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -272,6 +372,30 @@ export default function QualificationQuiz() {
               <p className="text-sm text-gray-600">
                 Based on your answers, you qualify for: <strong>{userTier.message}</strong>
               </p>
+            </div>
+            
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3 text-center">
+                Your Funding Profile
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                  <span className="text-gray-600">Qualification Score</span>
+                  <span className="font-bold text-blue-600">{quizScore}/{maxScore}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                  <span className="text-gray-600">Funding Range</span>
+                  <span className="font-bold text-green-600">{fundingRange}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                  <span className="text-gray-600">Approval Odds</span>
+                  <span className="font-bold text-purple-600">{approvalOdds}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-gray-200">
+                  <span className="text-gray-600">Processing Status</span>
+                  <span className="font-bold text-orange-600">{status.split('-')[0]?.trim()}</span>
+                </div>
+              </div>
             </div>
             
             <div className="text-center mb-6">
@@ -353,7 +477,7 @@ export default function QualificationQuiz() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:scale-100"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:scale-100 shadow-lg hover:shadow-xl"
               >
                 {isSubmitting ? (
                   <span className="flex items-center justify-center">
@@ -367,6 +491,13 @@ export default function QualificationQuiz() {
                   'See My Funding Options →'
                 )}
               </button>
+              
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-xs text-blue-700 text-center">
+                  <strong>What happens next?</strong><br />
+                  After submitting, you'll be redirected to your personalized funding options page. You'll also receive an email with your qualification results and next steps.
+                </p>
+              </div>
               
               <p className="text-xs text-gray-500 text-center mt-4">
                 By continuing, you agree to our Terms of Service and Privacy Policy
