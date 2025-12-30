@@ -40,8 +40,8 @@ export default function ContactSection() {
 
     try {
       await emailjs.send(
-        'service_renapht', // Your EmailJS service ID
-        'template_contact_form', // You'll need to create this template
+        'service_nwn8itj', // Your EmailJS service ID
+        'template_zt2zeu9', // You'll need to create this template
         {
           to_email: 'your-email@scoreupriseup.com',
           from_name: formData.name,
@@ -52,7 +52,7 @@ export default function ContactSection() {
           submission_type: 'Website Contact Form',
           submission_date: new Date().toISOString()
         },
-        'SS2R3dMbKoMDjBayk' // Your EmailJS public key
+        '7vyRc9YT7OttdbuIW' // Your EmailJS public key
       );
 
       setIsSubmitted(true);

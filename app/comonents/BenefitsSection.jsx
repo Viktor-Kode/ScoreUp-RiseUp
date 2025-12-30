@@ -238,51 +238,7 @@ export default function BenefitsSection() {
           </div>
         </motion.div>
 
-        {/* Alternative Solutions for Non-Qualified */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 mb-12"
-        >
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Not Qualified for Funding? We Have Solutions</h3>
-            <p className="text-gray-600">Our alternative packages help you build credit and qualify for future funding</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 text-center">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
-              <Target className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <div className="text-xl font-bold text-gray-900 mb-2">Credit Builder</div>
-              <div className="text-2xl font-bold text-green-600 mb-3">$7</div>
-              <p className="text-gray-600 text-sm mb-4">Basic credit education and DIY templates</p>
-              <button className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors">
-                Learn More
-              </button>
-            </div>
-            
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-300 transform scale-105 shadow-lg">
-              <TrendingUp className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <div className="text-xl font-bold text-gray-900 mb-2">Funding Ready</div>
-              <div className="text-2xl font-bold text-blue-600 mb-3">$497</div>
-              <p className="text-gray-600 text-sm mb-4">Credit repair + Business funding preparation</p>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
-                Get Started
-              </button>
-            </div>
-            
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-200">
-              <Building className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-              <div className="text-xl font-bold text-gray-900 mb-2">Business Elite</div>
-              <div className="text-2xl font-bold text-purple-600 mb-3">$997</div>
-              <p className="text-gray-600 text-sm mb-4">1-on-1 coaching + Advanced business strategies</p>
-              <button className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-purple-700 transition-colors">
-                Upgrade Now
-              </button>
-            </div>
-          </div>
-        </motion.div>
+      
 
         {/* Final CTA */}
         <motion.div
