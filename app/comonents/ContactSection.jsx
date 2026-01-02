@@ -140,7 +140,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Phone</h4>
-                  <p className="text-gray-600">(555) 123-4567</p>
+                  <p className="text-gray-600"> +1-800-421-7558</p>
                   <p className="text-sm text-gray-500">Mon-Fri 9AM-6PM EST</p>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">Email</h4>
-                  <p className="text-gray-600">support@scoreupriseup.com</p>
+                  <p className="text-gray-600">support@lmxsolutions.info</p>
                   <p className="text-sm text-gray-500">We respond within 24 hours</p>
                 </div>
               </div>
@@ -263,7 +263,7 @@ export default function ContactSection() {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="(555) 123-4567"
+                      placeholder="+1-800-421-7558"
                     />
                   </div>
                 </div>
